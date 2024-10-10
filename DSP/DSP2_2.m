@@ -1,0 +1,56 @@
+Fa = 440;
+N = 2000;
+Fs =N;
+Ts = 1/N;
+n = 0:Fs-1;
+n_g = 0:20-1;
+Fb = 261.626;
+x1 = sin(2*pi*Fa*n*Ts);
+x2 = sin(2*pi*Fb*n*Ts);
+xadd = x1 + x2;
+m=audioplayer(xadd ,Fs);
+play(m);
+figure(1);
+Ns = 20;
+plot(x1(1:Ns));
+hold on;
+plot(x2(1:Ns));
+plot(xadd(1:Ns));
+legend("x1(ラ)","x2(ド)","xadd(和音)")
+xticks([0 Ns/4 Ns/2 3*Ns/4 Ns]);
+xticklabels({"0","0.0025","0.005","0.0075","0.01"});
+xlabel("t [s]");
+ylabel("amplitude");
+hold off;
+
+%---------------------
+k=0:N-1;
+omega = 2 * pi * k /N;
+f = omega / 2/ pi;
+Fs = 1/Ts;
+Omega = omega * Fs;
+F = Omega /2/pi;
+%-----------3----------------
+X1k = fft(x1,N);
+amp1 = abs(X1k);
+X2k = fft(x2,N);
+amp2 = abs(X2k);
+Xaddk = fft(xadd,N);
+ampa = abs(Xaddk);
+figure(2);
+subplot(3,1,1);
+stem(F, amp1);
+%legend("x1(ラ)");
+title("x1(ラ)");
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|X[k]|");
+subplot(3,1,2);
+stem(F,amp2);
+title("x2(ド)");
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|X[k]|");
+subplot(3,1,3);
+stem(F,ampa);
+title("xadd(和音)");
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|X[k]|");

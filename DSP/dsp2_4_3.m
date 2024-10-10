@@ -1,0 +1,53 @@
+Fa = 440;
+N = 2000;
+Fs =N;
+Ts = 1/N;
+n = 0:Fs-1;
+n_g = 0:20-1;
+Fb = 261.626;
+Fc = 349.228;
+x1 = sin(2*pi*Fa*n*Ts);
+x2 = sin(2*pi*Fb*n*Ts);
+x3 = sin(2*pi*Fc*n*Ts);
+xadd = x1 + x2 + x3;
+%m=audioplayer(xadd ,Fs);
+%play(m);
+%---------------------
+k=0:N-1;
+omega = 2 * pi * k /N;
+f = omega / 2/ pi;
+Fs = 1/Ts;
+Omega = omega * Fs;
+F = Omega /2/pi;
+%-----------3----------------
+X1k = fft(x1,N);
+amp1 = abs(X1k);
+X2k = fft(x2,N);
+amp2 = abs(X2k);
+X3k = fft(x3,N);
+amp3 = abs(X3k);
+Xaddk = fft(xadd,N);
+ampa = abs(Xaddk);
+load('bp.mat');
+Xhk = fft(h_bpf,N);
+amph = abs(Xhk);
+figure(1)
+plot(F, amph);
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|H_{bpf}[k]|");
+yn = conv(xadd,h_bpf);
+my=audioplayer(yn ,Fs);
+play(my);
+Xyk = fft(yn,N);
+ampy = abs(Xyk);
+figure(2);
+subplot(2,1,1);
+stem(F,ampa);
+title("xadd(和音)");
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|X[k]|");
+subplot(2,1,2);
+stem(F, ampy);
+title("フィルタ後")
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|Y[k]|");

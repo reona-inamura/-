@@ -1,0 +1,78 @@
+N6 = 6;
+N32 = 32;
+n6 = 0:N6-1;
+n32=0:N32-1;
+F04 = 4;
+Ts6 = 1/N6;
+Ts32 = 1/N32;
+x32n=sin(2*pi*F0*Ts32*n32);
+x6n=sin(2*pi*F0*Ts6*n6);
+F06 = 6;
+x1 = sin(2*pi*F04*Ts32*n32);
+x2 = sin(2*pi*F06*Ts32*n32);
+xadd = x1 + x2;
+ncut = 7:29;
+x1 = sin(2*pi*F04*Ts32*ncut);
+x2 = sin(2*pi*F06*Ts32*ncut);
+xcut = x1 + x2;
+mado = hann(23);
+xw = xcut .* mado.';
+%----------------
+k32=0:N32-1;
+omega32 = 2 * pi * k32 /N32;
+f32 = omega32 / 2/ pi;
+Fs32 = 32;
+Omega32 = omega32 * Fs32;
+F32 = Omega32 /2/pi;
+
+kcut=7:29;
+kcut=0:22;
+omegacut = 2 * pi * kcut /23;
+fcut = omegacut / 2/ pi;
+Fscut = 23;
+Omegacut = omegacut * Fscut;
+Fcut = Omegacut /2/pi;
+%---------------
+Xaddk = fft(xadd,N32);
+amp32 = abs(Xaddk);
+Xcutk = fft(xcut,23);
+ampcut = abs(Xcutk);
+Xwk = fft(xw,23);
+ampw = abs(Xwk);
+figure(1);
+subplot(1,2,1);
+stem(n32* Ts32,xadd);
+title("標本化点数32の時間信号x_{add}")
+xlabel("時刻t[sec]");
+ylabel("振幅");
+subplot(1,2,2);
+stem(F32, amp32);
+title("32点FFTの振幅スペクトル|X_{add}[k]|");
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|X[k]|");
+figure(2);
+subplot(1,2,1);
+stem(ncut* Ts32,xcut);
+title("23点を切り出したx_{cut}の時間信号")
+xlabel("時刻t[sec]");
+ylabel("振幅");
+xlim([0,1.0]);
+subplot(1,2,2);
+stem(Fcut, ampcut);
+title("23点FFTの振幅スペクトル|X_{cut}[k]|");
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|X[k]|");
+xlim([0,32]);
+figure(3);
+subplot(1,2,1);
+stem(ncut* Ts32,xw);
+title("ハニング窓をかけた時間信号x_{w}[n]")
+xlabel("時刻t[sec]");
+ylabel("振幅");
+xlim([0,1.0]);
+subplot(1,2,2);
+stem(Fcut, ampw);
+title("23点FFTの振幅スペクトル|X_{w}[k]|");
+xlabel("周波数F[Hz]");
+ylabel("振幅スペクトル|X[k]|");
+xlim([0,32]);

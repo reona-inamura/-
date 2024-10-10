@@ -1,0 +1,27 @@
+Fa = 440;
+N = 2000;
+Fs =N;
+Ts = 1/N;
+n = 0:Fs-1;
+n_g = 0:20-1;
+Fb = 261.626;
+x1 = sin(2*pi*Fa*n*Ts);
+%x1_g = sin(2*pi*Fa*n_g*Ts);
+x2 = sin(2*pi*Fb*n*Ts);
+%x2_g = sin(2*pi*Fb*n_g*Ts);
+xadd = x1 + x2;
+%xadd_g = x1_g + x2_g;
+m=audioplayer(xadd ,Fs);
+play(m);
+figure(1);
+Ns = 20;
+plot(x1(1:Ns));
+hold on;
+plot(x2(1:Ns));
+plot(xadd(1:Ns));
+legend("x1(ラ)","x2(ド)","xadd(和音)")
+xticks([0 Ns/4 Ns/2 3*Ns/4 Ns]);
+xticklabels({"0","0.0025","0.005","0.0075","0.01"});
+xlabel("時刻t [s]");
+ylabel("振幅");
+hold off;
